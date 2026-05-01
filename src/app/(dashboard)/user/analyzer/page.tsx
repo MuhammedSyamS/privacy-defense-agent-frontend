@@ -72,7 +72,7 @@ function AnalyzerContent() {
           try {
             const res = await fetch(`${WORKER_URL}/result/${data.id}`);
             if (res.ok) {
-              const resData = await res.json();
+              const resData = (await res.json()) as any;
               clearInterval(pollInterval);
               clearInterval(stepInterval);
               setResult({

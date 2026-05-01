@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Shield, Mail, Lock, ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
+import { supabase, useMockAuth } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -20,15 +20,15 @@ export default function LoginPage() {
     setError('');
 
     try {
+      if (useMockAuth()) {
+        console.log('Dev Mode: Bypassing authentication');
+        router.push('/user');
+        return;
+      }
+
       const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
 
       if (authError) {
-        // Dev Bypass: If credentials are placeholders, allow any login
-        if (process.env.NEXT_PUBLIC_SUPABASE_URL?.includes('your-project')) {
-          console.log('Dev Mode: Bypassing authentication');
-          router.push('/user');
-          return;
-        }
         setError(authError.message);
         setLoading(false);
         return;

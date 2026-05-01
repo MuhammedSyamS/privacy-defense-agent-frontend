@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  fullName  String?
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  scams     ScamEvent[]
+
+  @@map("profiles")
+}
+
+model ScamEvent {
+  id              String   @id @default(uuid())
+  userId          String
+  contentType     String
+  rawContent      String
+  riskScore       Int
+  scamType        String?
+  explanation     String?
+  suggestedAction String?
+  metadata        Json?
+  createdAt       DateTime @default(now())
+
+  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("scam_events")
+}

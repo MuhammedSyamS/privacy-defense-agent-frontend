@@ -9,6 +9,8 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useSearchParams } from 'next/navigation';
+import { ScamShieldAgent } from '@/lib/agent';
+import { ContentType } from '@/types';
 
 
 const STEPS = ['Scanning linguistic heuristics', 'Verifying origin metadata', 'Correlating patterns', 'Synthesizing risk matrix'];
@@ -34,6 +36,20 @@ function AnalyzerContent() {
     setIsAnalyzing(true);
     setResult(null);
     setStepIndex(0);
+
+    // 1. PERFORM LOCAL-FIRST AGENT ANALYSIS
+    const localResult = ScamShieldAgent.analyze(inputType as ContentType, content, {});
+    
+    // Set initial local result to show immediate feedback
+    setResult({
+      score: Math.round(localResult.confidence * 100),
+      type: 'Local Analysis',
+      explanation: localResult.explanation,
+      action: localResult.suggested_action.toUpperCase(),
+      confidence: localResult.confidence,
+      origin: { country: 'Local Node', ip: '127.0.0.1' },
+      signals: localResult.signals.map(s => ({ name: s, severity: 'Warning' }))
+    });
 
     const stepInterval = setInterval(() => {
       setStepIndex(prev => (prev < STEPS.length - 1 ? prev + 1 : prev));

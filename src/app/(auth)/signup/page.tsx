@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Shield, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
+import { supabase, useMockAuth } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
@@ -19,6 +19,12 @@ export default function SignupPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    if (useMockAuth()) {
+      console.log('Bypassing real signup for testing');
+      setTimeout(() => router.push('/user'), 500);
+      return;
+    }
 
     const { data, error: authError } = await supabase.auth.signUp({
       email,

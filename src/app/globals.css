@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #050507;
+  --color-foreground: #ffffff;
+  --color-card: #0d0d12;
+  --color-card-foreground: #ffffff;
+  --color-primary: #00f2ff;
+  --color-primary-foreground: #000000;
+  --color-secondary: #1a1a24;
+  --color-secondary-foreground: #ffffff;
+  --color-muted: #1a1a24;
+  --color-muted-foreground: #a1a1aa;
+  --color-accent: #1a1a24;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #1f1f29;
+  --color-input: #1f1f29;
+  --color-ring: #00f2ff;
+
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+}
+
+:root {
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+@utility glass {
+  background: rgba(13, 13, 18, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@utility cyber-grid {
+  background-image: linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@utility cyber-glow {
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+}
+
+.risk-gradient {
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    #10b981 0deg,
+    #eab308 120deg,
+    #ef4444 240deg,
+    #10b981 360deg
+  );
+}
+
+/* Custom scrollbar for cyber look */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 10px;
+}

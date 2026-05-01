@@ -41,7 +41,7 @@ export default function LoginPage() {
         .eq('id', data.user.id)
         .single();
 
-      const role = profile?.role ?? 'user';
+      const role = (profile as any)?.role ?? 'user';
       router.push(role === 'admin' ? '/admin/monitor' : '/user');
     } catch (err) {
       // Fallback for network errors (likely due to invalid URL)

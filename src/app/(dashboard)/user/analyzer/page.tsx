@@ -59,7 +59,10 @@ function AnalyzerContent() {
       const response = await fetch(`${WORKER_URL}/scan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: inputType, payload: content })
+        body: JSON.stringify({ 
+          type: inputType === 'file' ? 'image' : inputType, // Map 'file' to 'image' for AI context
+          payload: content || "MEDIA_DATA_BLOB" 
+        })
       });
 
       const data = await response.json();
@@ -79,9 +82,8 @@ function AnalyzerContent() {
                 action: resData.action,
                 confidence: 0.98,
                 origin: { country: 'Detected', ip: 'Secured' },
-                signals: [
-                  { name: 'Neural Pattern', severity: resData.riskScore > 70 ? 'Critical' : 'High' },
-                  { name: 'Phishing Heuristic', severity: 'High' }
+                signals: resData.signals || [
+                  { name: 'Neural Pattern', severity: resData.riskScore > 70 ? 'Critical' : 'High' }
                 ]
               });
               setIsAnalyzing(false);

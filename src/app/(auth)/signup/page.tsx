@@ -40,7 +40,7 @@ export default function SignupPage() {
 
     // Create profile row with default 'user' role
     if (data.user) {
-      await supabase.from('profiles').insert({
+      await (supabase.from('profiles') as any).insert({
         id: data.user.id,
         email,
         role: 'user',

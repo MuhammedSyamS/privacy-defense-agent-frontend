@@ -6,9 +6,11 @@ import { ScamEvent } from '@/types';
 import RiskGauge from '@/components/RiskGauge';
 import ThreatFeed from '@/components/ThreatFeed';
 import Analyzer from '@/components/Analyzer';
-import { Shield, LayoutDashboard, Database, Settings, Bell, Zap, Globe, Search, PlusCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Card, CardContent } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 import { ScamShieldAgent } from '@/lib/agent';
+import { ArrowUpRight, TrendingUp, Users, ShieldCheck, Zap } from 'lucide-react';
 
 export default function Home() {
   const [events, setEvents] = useState<ScamEvent[]>(MOCK_EVENTS);
@@ -51,8 +53,6 @@ export default function Home() {
       setEvents(prev => [newEvent, ...prev]);
       setSelectedEvent(newEvent);
     } catch (error) {
-      console.warn('Backend not running, using local simulation fallback');
-      // Fallback to local logic
       const analysis = ScamShieldAgent.analyze('text', payload.content, {});
       const fallbackEvent: ScamEvent = {
         id: Math.random().toString(36).substr(2, 9),
@@ -72,128 +72,108 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex h-screen bg-[#050507] text-white overflow-hidden cyber-grid">
-      {/* Sidebar */}
-      <aside className="w-20 lg:w-64 border-r border-white/5 flex flex-col items-center lg:items-start p-6 glass z-10">
-        <div className="flex items-center gap-3 mb-12">
-          <div className="p-2 bg-primary rounded-xl cyber-glow">
-            <Shield className="w-6 h-6 text-black" />
-          </div>
-          <h1 className="text-xl font-bold hidden lg:block tracking-tighter italic">SCAM<span className="text-primary">SHIELD</span></h1>
+    <div className="flex flex-col gap-10">
+      {/* SaaS Dashboard Header */}
+      <div className="flex items-end justify-between">
+        <div>
+          <h1 className="text-4xl font-black text-black tracking-tighter">Security Overview</h1>
+          <p className="text-zinc-500 mt-2 font-medium">Monitoring inbound signals for <span className="text-black font-bold underline">Admin User</span>. Nodes: 12 Active.</p>
         </div>
-
-        <nav className="flex flex-col gap-2 w-full">
-          {[
-            { icon: LayoutDashboard, label: 'Dashboard', active: true },
-            { icon: Zap, label: 'Live Events' },
-            { icon: Database, label: 'Threat Memory' },
-            { icon: Globe, label: 'Network Intelligence' },
-            { icon: Settings, label: 'Agent Settings' },
-          ].map((item, i) => (
-            <button
-              key={i}
-              className={`flex items-center gap-4 p-3 rounded-xl transition-all w-full ${
-                item.active ? 'bg-primary/10 text-primary border border-primary/20' : 'text-muted-foreground hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <item.icon className="w-5 h-5" />
-              <span className="text-sm font-medium hidden lg:block">{item.label}</span>
-            </button>
-          ))}
-        </nav>
-
-        <div className="mt-auto p-4 glass rounded-2xl hidden lg:block border border-primary/20">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-bold uppercase text-primary">System Status</span>
-            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-          </div>
-          <p className="text-[10px] text-muted-foreground">Autonomous Agent active across 4 nodes. Real-time scanning enabled.</p>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" onClick={() => setSelectedEvent(null)} className="border-zinc-200">Reset View</Button>
+          <Button onClick={simulateThreat} className="rounded-xl px-8 shadow-lg shadow-black/20">Simulate Inbound</Button>
         </div>
-      </aside>
+      </div>
 
-      {/* Main Content */}
-      <section className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <header className="h-20 border-b border-white/5 flex items-center justify-between px-8 glass shrink-0">
-          <div className="flex items-center gap-4 flex-1">
-            <div className="relative max-w-md w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input 
-                type="text" 
-                placeholder="Search threat history or signals..." 
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all"
-              />
-            </div>
-          </div>
-          <div className="flex items-center gap-6">
-            <button 
-              onClick={simulateThreat}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-black rounded-xl font-bold hover:scale-105 transition-all cyber-glow"
-            >
-              <PlusCircle className="w-4 h-4" />
-              Simulate Inbound Threat
-            </button>
-            <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
-              <div className="w-2 h-2 rounded-full bg-primary" />
-              <span className="text-xs font-medium">Node: SGP-01</span>
-            </div>
-            <button className="relative p-2 text-muted-foreground hover:text-white transition-all">
-              <Bell className="w-5 h-5" />
-              <div className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#050507]" />
-            </button>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-blue-600 border border-white/10" />
-          </div>
-        </header>
-
-        {/* Dashboard Grid */}
-        <div className="flex-1 p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 overflow-hidden">
-          {/* Left Column: Feed */}
-          <div className="lg:col-span-3 flex flex-col min-h-0">
-            <ThreatFeed 
-              events={events} 
-              onSelect={setSelectedEvent} 
-              selectedId={selectedEvent?.id} 
-            />
-          </div>
-
-          {/* Middle Column: Analyzer */}
-          <div className="lg:col-span-6 flex flex-col min-h-0">
-            <Analyzer event={selectedEvent} />
-          </div>
-
-          {/* Right Column: Stats & Memory */}
-          <div className="lg:col-span-3 flex flex-col gap-8 min-h-0">
-            <RiskGauge score={78} />
-            
-            <div className="glass rounded-3xl p-6 flex-1 overflow-y-auto custom-scrollbar border border-white/5">
-              <h3 className="text-xs font-bold uppercase text-muted-foreground mb-4">Threat Intelligence</h3>
-              <div className="space-y-4">
-                {[
-                  { title: 'Global Phishing Wave', detail: 'Targeting Chase Bank customers via SMS', severity: 'High' },
-                  { title: 'Deepfake Voice Pattern', detail: 'Synthetic speech mimicking family members', severity: 'Critical' },
-                  { title: 'New Ransomware Variant', detail: 'Pattern match for LockBit 4.0 detected', severity: 'Medium' }
-                ].map((item, i) => (
-                  <div key={i} className="p-3 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-all cursor-default">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold">{item.title}</span>
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${
-                        item.severity === 'Critical' ? 'bg-red-500' : 
-                        item.severity === 'High' ? 'bg-orange-500' : 'bg-yellow-500'
-                      }`}>
-                        {item.severity}
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-muted-foreground">{item.detail}</p>
-                  </div>
-                ))}
+      {/* Analytics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {[
+          { label: 'Network Active', value: '12', icon: ShieldCheck, trend: 'STABLE' },
+          { label: 'Intercepted', value: '429', icon: Zap, trend: '+12%' },
+          { label: 'Safety Rate', value: '99.8%', icon: TrendingUp, trend: 'OPTIMAL' },
+          { label: 'Total Users', value: '1,242', icon: Users, trend: '+84' },
+        ].map((stat, i) => (
+          <Card key={i} className="border-zinc-100 bg-zinc-50/50 hover:bg-white transition-all cursor-default group">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="p-2 bg-white rounded-lg border border-zinc-100 group-hover:bg-black group-hover:text-white transition-all">
+                  <stat.icon className="w-4 h-4" />
+                </div>
+                <Badge variant="neutral" className="text-[9px] font-black bg-white group-hover:bg-black group-hover:text-white group-hover:border-black transition-all">
+                  {stat.trend}
+                </Badge>
               </div>
-              <button className="w-full mt-6 py-2 text-xs font-bold text-primary border border-primary/20 rounded-xl hover:bg-primary/5 transition-all">
-                View Full Intelligence Report
-              </button>
+              <div>
+                <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.1em]">{stat.label}</p>
+                <h4 className="text-2xl font-black text-black mt-1 tracking-tighter">{stat.value}</h4>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Primary Dashboard Sections */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        {/* Left: Metrics & Feed */}
+        <div className="lg:col-span-3 flex flex-col gap-10">
+          <RiskGauge score={78} />
+          <ThreatFeed 
+            events={events} 
+            onSelect={setSelectedEvent} 
+            selectedId={selectedEvent?.id} 
+          />
+        </div>
+
+        {/* Middle: Agent Analyzer */}
+        <div className="lg:col-span-6 min-h-[600px]">
+          <Analyzer event={selectedEvent} />
+        </div>
+
+        {/* Right: Intel & Upgrade */}
+        <div className="lg:col-span-3 flex flex-col gap-8">
+          <div className="bg-white border border-zinc-200 rounded-[2rem] p-8 shadow-sm">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-6">Threat Intelligence</h3>
+            <div className="space-y-6">
+              {[
+                { title: 'Phishing Pattern #42', status: 'Blocked', date: '2m' },
+                { title: 'Synthetic Voice', status: 'Analysis', date: '14m' },
+                { title: 'Auth Portal Clone', status: 'Removed', date: '1h' }
+              ].map((item, i) => (
+                <div key={i} className="flex items-center justify-between group cursor-pointer">
+                  <div>
+                    <p className="text-sm font-bold text-black group-hover:underline">{item.title}</p>
+                    <p className="text-[10px] text-zinc-400 font-black uppercase tracking-tighter">{item.date} ago</p>
+                  </div>
+                  <Badge variant="neutral" className="bg-zinc-50">
+                    {item.status}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+            <Button variant="ghost" className="w-full mt-8 text-[10px] font-black uppercase tracking-widest border border-zinc-100">
+              Full Intelligence Feed
+            </Button>
+          </div>
+
+          <div className="bg-black rounded-[2rem] p-8 relative overflow-hidden group cursor-pointer shadow-xl shadow-black/20">
+            <div className="relative z-10">
+              <h3 className="text-white text-xl font-black tracking-tighter mb-2 flex items-center gap-2">
+                Privacy Pro
+                <ArrowUpRight className="w-5 h-5 text-zinc-500" />
+              </h3>
+              <p className="text-zinc-400 text-xs leading-relaxed font-medium">
+                Unlock multi-node support, deepfake visual analysis, and custom remediation rules.
+              </p>
+              <Button variant="secondary" className="mt-6 w-full py-4 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl bg-white text-black hover:bg-zinc-200">
+                Upgrade Enterprise
+              </Button>
+            </div>
+            <div className="absolute -bottom-4 -right-4 opacity-10 transform rotate-12 group-hover:scale-110 transition-all">
+              <ShieldCheck className="w-32 h-32 text-white" />
             </div>
           </div>
         </div>
-      </section>
-    </main>
+      </div>
+    </div>
   );
 }

@@ -2,7 +2,10 @@
 
 import { ScamEvent } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, XCircle, AlertCircle, ShieldAlert, Cpu, Activity, Database } from 'lucide-react';
+import { CheckCircle2, XCircle, AlertCircle, ShieldAlert, Cpu, Activity, Database, ExternalLink } from 'lucide-react';
+import { Card, CardHeader, CardContent } from './ui/Card';
+import { Button } from './ui/Button';
+import { Badge } from './ui/Badge';
 
 interface AnalyzerProps {
   event: ScamEvent | null;
@@ -11,11 +14,13 @@ interface AnalyzerProps {
 export default function Analyzer({ event }: AnalyzerProps) {
   if (!event) {
     return (
-      <div className="h-full flex flex-col items-center justify-center glass rounded-3xl p-12 text-center">
-        <Cpu className="w-16 h-16 text-muted-foreground/20 mb-4 animate-pulse" />
-        <h3 className="text-xl font-semibold text-muted-foreground">Select an event to start deep analysis</h3>
-        <p className="text-sm text-muted-foreground/60 mt-2 max-w-xs">
-          Our autonomous agent is continuously monitoring signals for suspicious patterns.
+      <div className="h-full flex flex-col items-center justify-center p-12 text-center bg-white rounded-3xl border border-zinc-100 shadow-sm">
+        <div className="w-16 h-16 rounded-2xl bg-zinc-50 flex items-center justify-center mb-6 border border-zinc-100">
+          <Cpu className="w-8 h-8 text-zinc-300" />
+        </div>
+        <h3 className="text-xl font-bold text-black tracking-tight">Security Deep Scan</h3>
+        <p className="text-sm text-zinc-500 mt-2 max-w-xs mx-auto leading-relaxed">
+          Select a suspicious inbound event to initiate autonomous multi-modal analysis.
         </p>
       </div>
     );
@@ -25,101 +30,101 @@ export default function Analyzer({ event }: AnalyzerProps) {
     <AnimatePresence mode="wait">
       <motion.div
         key={event.id}
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="h-full flex flex-col gap-6 glass rounded-3xl p-8 overflow-y-auto custom-scrollbar"
+        exit={{ opacity: 0, scale: 0.98 }}
+        className="h-full flex flex-col gap-6"
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className={`p-4 rounded-2xl ${
-              event.risk_score > 75 ? 'bg-red-500/10 text-red-500' : 'bg-yellow-500/10 text-yellow-500'
-            }`}>
-              <ShieldAlert className="w-8 h-8" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold">Threat Analysis</h2>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-xs uppercase font-mono px-2 py-0.5 bg-white/5 rounded text-muted-foreground border border-white/10">
-                  ID: {event.id.slice(0, 8)}
-                </span>
-                <span className="text-xs uppercase font-mono px-2 py-0.5 bg-white/5 rounded text-muted-foreground border border-white/10">
-                  Source: {event.source}
-                </span>
+        <Card className="border-zinc-200">
+          <div className="p-8">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-6">
+                <div className="p-4 rounded-2xl bg-black text-white shadow-xl shadow-black/10">
+                  <ShieldAlert className="w-10 h-10" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <h2 className="text-2xl font-black text-black tracking-tighter">Threat Analysis</h2>
+                    <Badge variant={event.risk_score > 75 ? 'danger' : 'neutral'}>
+                      {event.risk_score > 75 ? 'Critical' : 'Review'}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5 text-[10px] font-black text-zinc-400 bg-zinc-50 px-2 py-1 rounded-md border border-zinc-100 uppercase tracking-widest">
+                      ID: {event.id.slice(0, 8)}
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[10px] font-black text-zinc-400 bg-zinc-50 px-2 py-1 rounded-md border border-zinc-100 uppercase tracking-widest">
+                      Type: {event.source}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-5xl font-black tracking-tighter text-black">
+                  {event.risk_score}%
+                </div>
+                <div className="text-[10px] uppercase tracking-widest text-zinc-400 font-black mt-1">Risk Probability</div>
               </div>
             </div>
-          </div>
-          <div className="text-right">
-            <div className="text-4xl font-bold font-mono text-red-500">{event.risk_score}%</div>
-            <div className="text-[10px] uppercase tracking-tighter text-muted-foreground font-bold">Risk Probability</div>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
-            <div className="flex items-center gap-2 text-primary mb-2">
-              <Activity className="w-4 h-4" />
-              <span className="text-xs font-bold uppercase">Signal Matrix</span>
+            <div className="mt-10 grid grid-cols-2 gap-4">
+              <div className="p-5 bg-white rounded-xl border border-zinc-200 shadow-sm">
+                <div className="flex items-center gap-2 text-black mb-4">
+                  <Activity className="w-4 h-4" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Signal Matrix</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {event.analysis?.signals.map((signal, i) => (
+                    <span key={i} className="text-[10px] font-bold px-2.5 py-1.5 bg-zinc-100 text-black rounded-md border border-zinc-200">
+                      {signal}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="p-5 bg-white rounded-xl border border-zinc-200 shadow-sm">
+                <div className="flex items-center gap-2 text-black mb-4">
+                  <Database className="w-4 h-4" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Cluster Match</span>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-black text-black">#829</span>
+                </div>
+                <p className="text-[10px] font-bold text-zinc-400 mt-2 uppercase tracking-tight">Active Financial Fraud Cluster</p>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {event.analysis?.signals.map((signal, i) => (
-                <span key={i} className="text-[10px] px-2 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full">
-                  {signal}
-                </span>
-              ))}
+
+            <div className="mt-6 p-6 bg-zinc-50 rounded-2xl border border-zinc-200 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <ShieldAlert className="w-32 h-32 text-black" />
+              </div>
+              <h3 className="text-[10px] font-black uppercase text-zinc-400 mb-4 flex items-center gap-2 tracking-widest">
+                <AlertCircle className="w-4 h-4 text-black" />
+                Agent Intelligence Report
+              </h3>
+              <p className="text-lg text-black leading-snug font-semibold relative z-10 tracking-tight">
+                {event.analysis?.explanation}
+              </p>
+            </div>
+
+            <div className="mt-8 flex items-center gap-4">
+              <Button variant="primary" className="flex-1 py-5 text-xs uppercase tracking-widest font-black rounded-2xl">
+                Block & Report
+              </Button>
+              <Button variant="outline" className="flex-1 py-5 text-xs uppercase tracking-widest font-black rounded-2xl border-zinc-200">
+                Mark as Safe
+              </Button>
             </div>
           </div>
-          <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
-            <div className="flex items-center gap-2 text-green-500 mb-2">
-              <Database className="w-4 h-4" />
-              <span className="text-xs font-bold uppercase">Confidence</span>
-            </div>
-            <div className="text-2xl font-bold font-mono">{(event.analysis?.confidence || 0) * 100}%</div>
-            <div className="w-full bg-white/10 h-1.5 rounded-full mt-2 overflow-hidden">
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: `${(event.analysis?.confidence || 0) * 100}%` }}
-                className="h-full bg-green-500" 
-              />
-            </div>
+        </Card>
+        
+        <div className="mt-auto flex items-center justify-between text-[10px] text-zinc-400 font-black uppercase tracking-widest border-t border-zinc-100 pt-6 px-4">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-black rounded-full animate-pulse" />
+            Security node active (SGP-01)
           </div>
-        </div>
-
-        <div className="p-4 bg-primary/5 rounded-2xl border border-primary/20">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2 text-primary">
-              <Database className="w-4 h-4" />
-              <span className="text-xs font-bold uppercase tracking-widest">Memory Scan</span>
-            </div>
-            <span className="text-[10px] font-bold text-primary animate-pulse">MATCH DETECTED</span>
-          </div>
-          <p className="text-xs text-primary/80">
-            Current signal pattern matches <span className="font-bold underline">Scam Cluster #829</span> (Financial Phishing / Netflix Spoofer). 
-            Previously neutralized in 12,402 instances globally.
-          </p>
-        </div>
-
-        <div className="p-6 bg-white/5 rounded-3xl border border-white/5">
-          <h3 className="text-sm font-bold uppercase mb-4 flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-primary" />
-            Agent Findings
-          </h3>
-          <p className="text-lg leading-relaxed text-foreground/90 font-medium">
-            {event.analysis?.explanation}
-          </p>
-        </div>
-
-        <div className="mt-auto">
-          <h3 className="text-xs font-bold uppercase text-muted-foreground mb-4">Recommended Actions</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <button className="flex items-center justify-center gap-2 py-4 rounded-2xl bg-red-500 text-white font-bold hover:bg-red-600 transition-all shadow-[0_0_20px_rgba(239,68,68,0.2)]">
-              <XCircle className="w-5 h-5" />
-              Block Sender
-            </button>
-            <button className="flex items-center justify-center gap-2 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition-all">
-              <CheckCircle2 className="w-5 h-5" />
-              Flag as Safe
-            </button>
+          <div className="flex items-center gap-4">
+            <span className="hover:text-black cursor-pointer transition-all">Audit Log</span>
+            <span className="hover:text-black cursor-pointer transition-all">Export Report</span>
           </div>
         </div>
       </motion.div>

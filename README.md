@@ -1,4 +1,5 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ScamShield AI - Autonomous Security Agent
+Build Stamp: 2024-10-24 19:30 UTC
 
 ## Getting Started
 

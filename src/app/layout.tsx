@@ -1,43 +1,31 @@
-'use client';
-
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
-import Navbar from "@/components/Navbar";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { AuthProvider } from "@/lib/auth-context";
+import ClientLayout from "@/components/ClientLayout";
+import { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+
+export const metadata: Metadata = {
+  title: "ScamShield Agent — Neural Cyber Intelligence",
+  description: "Autonomous cybersecurity agent powered by Cloudflare Workers AI. Detect scams, phishing, and deepfakes in real-time.",
+  icons: {
+    icon: "/favicon.png",
+  },
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const isAuthPage = pathname?.startsWith("/login") || pathname?.startsWith("/signup");
-
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.png" />
+      </head>
       <body className={cn(inter.variable, "font-sans bg-[#0B0F19] text-white antialiased")}>
-        <AuthProvider>
-          {isAuthPage ? (
-            <>{children}</>
-          ) : (
-            <div className="flex min-h-screen">
-              <Sidebar />
-              <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-                <Navbar />
-                <main className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
-                  <div className="max-w-[1600px] mx-auto">
-                    {children}
-                  </div>
-                </main>
-              </div>
-            </div>
-          )}
-        </AuthProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

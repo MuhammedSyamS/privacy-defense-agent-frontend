@@ -44,7 +44,7 @@ export default function Sidebar() {
           <Shield className="w-5 h-5 text-white" />
         </div>
         {!isCollapsed && (
-          <span className="font-bold text-white tracking-tight text-base">Privacy Agent</span>
+          <span className="font-bold text-white tracking-tight text-base italic">ScamShield Agent</span>
         )}
       </div>
 

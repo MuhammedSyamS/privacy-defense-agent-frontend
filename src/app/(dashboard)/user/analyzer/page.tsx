@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { 
   MessageSquare, Upload, ArrowRight, Loader2, 
   AlertTriangle, CheckCircle, Shield, Fingerprint,
@@ -13,7 +13,8 @@ import { useSearchParams } from 'next/navigation';
 
 const STEPS = ['Scanning linguistic heuristics', 'Verifying origin metadata', 'Correlating patterns', 'Synthesizing risk matrix'];
 
-export default function AnalyzerPage() {
+function AnalyzerContent() {
+
   const searchParams = useSearchParams();
   const typeParam = searchParams.get('type') || 'text';
   const queryParam = searchParams.get('q') || '';
@@ -329,3 +330,16 @@ export default function AnalyzerPage() {
     </div>
   );
 }
+
+export default function AnalyzerPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+      </div>
+    }>
+      <AnalyzerContent />
+    </Suspense>
+  );
+}
+

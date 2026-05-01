@@ -1,42 +1,49 @@
 'use client';
 
-import { Search, Bell, User, PlusCircle } from 'lucide-react';
-import { Button } from './ui/Button';
+import { Search, Bell, Plus, Command, LogIn } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Navbar() {
   return (
-    <header className="h-16 border-b border-zinc-200 bg-white/80 backdrop-blur-md sticky top-0 z-40 px-8 flex items-center justify-between">
-      <div className="flex items-center gap-4 flex-1">
-        <div className="relative max-w-md w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-          <input 
-            type="text" 
-            placeholder="Search dashboard..." 
-            className="w-full bg-zinc-50 border border-zinc-200 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-4 focus:ring-black/5 focus:border-black transition-all"
-          />
+    <header className="h-16 border-b border-white/5 bg-[#0B0F19]/90 backdrop-blur-md flex items-center justify-between px-6 z-40 sticky top-0">
+      {/* Global Search */}
+      <div className="flex-1 max-w-xl relative group">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-blue-400 transition-colors pointer-events-none" />
+        <input
+          type="text"
+          placeholder="Search scans, reports, forensic data..."
+          className="w-full bg-white/[0.04] border border-white/[0.06] rounded-xl py-2.5 pl-11 pr-24 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.06] transition-all"
+        />
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-white/[0.06] border border-white/[0.06] pointer-events-none">
+          <Command className="w-3 h-3 text-zinc-600" />
+          <span className="text-[10px] font-bold text-zinc-600">K</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <Button variant="outline" size="sm" className="hidden sm:flex items-center gap-2 border-zinc-200 text-black">
-          <PlusCircle className="w-4 h-4" />
-          Quick Scan
-        </Button>
-        <div className="h-6 w-px bg-zinc-200 mx-2" />
-        <button className="relative p-2 text-zinc-400 hover:text-black transition-all">
+      {/* Right Actions */}
+      <div className="flex items-center gap-3 ml-6">
+        <Link
+          href="/user/analyzer"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20"
+        >
+          <Plus className="w-4 h-4" />
+          New Scan
+        </Link>
+
+        <button className="relative p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.07] transition-all">
           <Bell className="w-5 h-5" />
-          <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-black rounded-full" />
+          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[#0B0F19]" />
         </button>
-        <div className="flex items-center gap-3 pl-2 cursor-pointer group">
-          <Link href="/login" className="text-right hidden sm:block">
-            <p className="text-sm font-bold text-black group-hover:underline transition-all">Admin User</p>
-            <p className="text-[10px] text-zinc-400 uppercase font-black tracking-tighter">Enterprise • Log Out</p>
-          </Link>
-          <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white group-hover:scale-105 transition-all">
-            <User className="w-4 h-4" />
-          </div>
-        </div>
+
+        <div className="h-7 w-px bg-white/[0.06]" />
+
+        <Link
+          href="/login"
+          className="flex items-center gap-2 px-4 py-2 bg-white/[0.05] hover:bg-white/[0.09] border border-white/[0.08] text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all"
+        >
+          <LogIn className="w-4 h-4" />
+          Login
+        </Link>
       </div>
     </header>
   );

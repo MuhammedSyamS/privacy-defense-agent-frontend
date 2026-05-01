@@ -45,8 +45,8 @@ export default function Analyzer({ event }: AnalyzerProps) {
                 <div>
                   <div className="flex items-center gap-3 mb-2">
                     <h2 className="text-2xl font-black text-black tracking-tighter">Threat Analysis</h2>
-                    <Badge variant={event.risk_score > 75 ? 'danger' : 'neutral'}>
-                      {event.risk_score > 75 ? 'Critical' : 'Review'}
+                    <Badge variant={event.risk_score > 75 ? 'danger' : 'success'}>
+                      {event.risk_score > 75 ? 'Critical' : 'Secure'}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-3">

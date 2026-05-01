@@ -7,10 +7,10 @@ export function Badge({ children, variant = 'neutral', className }: {
 }) {
   const variants = {
     neutral: "bg-zinc-100 text-zinc-700 border-zinc-200",
-    success: "bg-zinc-900 text-white border-zinc-900",
-    warning: "bg-zinc-100 text-zinc-900 border-zinc-300",
-    danger: "bg-zinc-900 text-white border-zinc-900",
-    primary: "bg-zinc-900 text-white border-zinc-900",
+    success: "bg-emerald-500 text-white border-emerald-600",
+    warning: "bg-amber-500 text-white border-amber-600",
+    danger: "bg-red-500 text-white border-red-600",
+    primary: "bg-black text-white border-black",
   };
 
   return (

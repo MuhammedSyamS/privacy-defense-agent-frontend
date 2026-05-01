@@ -68,7 +68,7 @@ export default function ThreatFeed({ events, onSelect, selectedId }: ThreatFeedP
                 </div>
               </div>
               <Badge 
-                variant={selectedId === event.id ? 'neutral' : (event.risk_score > 75 ? 'danger' : 'neutral')}
+                variant={selectedId === event.id ? 'neutral' : (event.risk_score > 75 ? 'danger' : 'success')}
                 className={selectedId === event.id ? 'bg-zinc-800 border-zinc-700 text-white' : ''}
               >
                 {event.risk_score}%

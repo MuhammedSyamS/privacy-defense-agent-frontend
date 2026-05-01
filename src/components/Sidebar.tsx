@@ -1,19 +1,24 @@
 'use client';
 
-import { Shield, LayoutDashboard, Database, Settings, Zap, Globe, ChevronRight, X } from 'lucide-react';
+import { Shield, LayoutDashboard, Database, Settings, Zap, Globe, ChevronRight, X, UserCircle } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [viewMode, setViewMode] = useState<'admin' | 'user'>('admin');
 
-  const navItems = [
-    { icon: LayoutDashboard, label: 'Overview', active: true, href: '/' },
-    { icon: Zap, label: 'Threat Feed', href: '/threats' },
-    { icon: Database, label: 'Memory Bank', href: '/memory' },
-    { icon: Globe, label: 'Network', href: '/network' },
-    { icon: Settings, label: 'Settings', href: '/settings' },
+  const navItems = viewMode === 'admin' ? [
+    { icon: LayoutDashboard, label: 'Admin Overview', active: true, href: '/' },
+    { icon: Zap, label: 'Global Threat Feed', href: '/' },
+    { icon: Globe, label: 'Network Intel', href: '/' },
+    { icon: Settings, label: 'System Settings', href: '/settings' },
+  ] : [
+    { icon: UserCircle, label: 'User Dashboard', active: true, href: '/user' },
+    { icon: Shield, label: 'My Protection', href: '/user' },
+    { icon: Database, label: 'Security History', href: '/user' },
+    { icon: Settings, label: 'Account Settings', href: '/settings' },
   ];
 
   return (
@@ -30,6 +35,26 @@ export default function Sidebar() {
           <span className="font-bold text-black tracking-tighter text-lg">PrivacyAgent</span>
         )}
       </div>
+
+      {/* View Switcher */}
+      {!isCollapsed && (
+        <div className="p-4">
+          <div className="bg-zinc-50 p-1 rounded-xl flex border border-zinc-100">
+            <button 
+              onClick={() => setViewMode('admin')}
+              className={cn("flex-1 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all", viewMode === 'admin' ? "bg-white text-black shadow-sm" : "text-zinc-400")}
+            >
+              Admin
+            </button>
+            <button 
+              onClick={() => setViewMode('user')}
+              className={cn("flex-1 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all", viewMode === 'user' ? "bg-white text-black shadow-sm" : "text-zinc-400")}
+            >
+              User
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Nav */}
       <nav className="flex-1 p-4 flex flex-col gap-1">

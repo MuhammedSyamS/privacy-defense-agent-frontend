@@ -2,6 +2,7 @@
 
 import { Search, Bell, User, PlusCircle } from 'lucide-react';
 import { Button } from './ui/Button';
+import Link from 'next/link';
 
 export default function Navbar() {
   return (
@@ -28,10 +29,10 @@ export default function Navbar() {
           <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-black rounded-full" />
         </button>
         <div className="flex items-center gap-3 pl-2 cursor-pointer group">
-          <div className="text-right hidden sm:block">
+          <Link href="/login" className="text-right hidden sm:block">
             <p className="text-sm font-bold text-black group-hover:underline transition-all">Admin User</p>
-            <p className="text-[10px] text-zinc-400 uppercase font-black tracking-tighter">Enterprise</p>
-          </div>
+            <p className="text-[10px] text-zinc-400 uppercase font-black tracking-tighter">Enterprise • Log Out</p>
+          </Link>
           <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white group-hover:scale-105 transition-all">
             <User className="w-4 h-4" />
           </div>
